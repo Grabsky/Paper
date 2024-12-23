@@ -134,6 +134,16 @@ configurations {
 }
 
 configure<PublishingExtension> {
+    // GH Packages Publication
+    repositories {
+        maven {
+            url = uri("https://maven.pkg.github.com/Grabsky/Paper")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
     publications.create<MavenPublication>("maven") {
         // For Brigadier API
         outgoingVariants.forEach {
