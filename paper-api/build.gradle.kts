@@ -137,11 +137,17 @@ configure<PublishingExtension> {
     // GH Packages Publication
     repositories {
         maven {
+            name = "gpr"
             url = uri("https://maven.pkg.github.com/Grabsky/Paper")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
             }
+        }
+    }
+    publications {
+        register<MavenPublication>("packages") {
+            from (components["java"])
         }
     }
     publications.create<MavenPublication>("maven") {

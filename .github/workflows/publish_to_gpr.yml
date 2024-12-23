@@ -21,10 +21,10 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       # Publishing
-      - name: Build
+      - name: publish
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: publish --no-daemon
+          arguments: publishPackagesPublicationToGprRepository --no-daemon
         env:
           # GitHub Packages
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
