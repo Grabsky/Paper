@@ -12,6 +12,22 @@
                          unlock(level, state, pos, config, serverData, sharedData, list);
                          serverData.addToRewardedPlayers(player);
                          sharedData.updateConnectedPlayersWithinRange(level, pos, serverData, config, config.deactivationRange());
+@@ -283,8 +_,13 @@
+         static void setVaultState(ServerLevel level, BlockPos pos, BlockState oldState, BlockState newState, VaultConfig config, VaultSharedData sharedData) {
+             VaultState vaultState = oldState.getValue(VaultBlock.STATE);
+             VaultState vaultState1 = newState.getValue(VaultBlock.STATE);
+-            level.setBlock(pos, newState, 3);
+-            vaultState.onTransition(level, pos, vaultState1, config, sharedData, newState.getValue(VaultBlock.OMINOUS));
++            // FireDOT start - VaultStateChangeEvent
++            final pl.firedot.paper.event.VaultStateChangeEvent event = new pl.firedot.paper.event.VaultStateChangeEvent(org.bukkit.craftbukkit.block.CraftBlock.at(level, pos), org.bukkit.block.data.type.Vault.State.valueOf(vaultState.name()), org.bukkit.block.data.type.Vault.State.valueOf(vaultState1.name()));
++            if (event.callEvent()) {
++                level.setBlock(pos, newState, 3);
++                vaultState.onTransition(level, pos, vaultState1, config, sharedData, newState.getValue(VaultBlock.OMINOUS));
++            }
++            // FireDOT stop - VaultStateChangeEvent
+         }
+ 
+         static void cycleDisplayItemFromLootTable(ServerLevel level, VaultState state, VaultConfig config, VaultSharedData sharedData, BlockPos pos) {
 @@ -294,6 +_,11 @@
                  ItemStack randomDisplayItemFromLootTable = getRandomDisplayItemFromLootTable(
                      level, pos, config.overrideLootTableToDisplay().orElse(config.lootTable())
